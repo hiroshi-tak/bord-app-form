@@ -1,0 +1,29 @@
+# Frontend (Vue / Vite)
+frontend/node_modules/
+frontend/dist/
+
+# Backend (Spring Boot)
+backend/.gradle/
+backend/build/
+
+# IntelliJ
+backend/.idea/
+*.iml
+
+# VSCode
+.vscode/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Docker
+postgres-data/
