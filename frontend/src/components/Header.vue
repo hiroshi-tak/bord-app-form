@@ -23,6 +23,7 @@
             </RouterLink>
         
             <button
+              v-if="auth.user"
               class="text-sm rounded bg-red-500 px-3 py-2 hover:bg-red-600"
               @click="logout"
             >
