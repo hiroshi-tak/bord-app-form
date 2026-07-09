@@ -1,7 +1,7 @@
 <template>
   <header class="bg-blue-600 px-8 py-4 text-white">
     <nav class="flex items-center justify-between">
-        <h1 class="text-2xl font-bold">
+        <h1 class="text-xl font-bold">
         Whiteboard App
         </h1>
 
@@ -9,7 +9,7 @@
             <RouterLink
               v-if="auth.user?.role === 'ADMIN'"
               to="/admin"
-              class="rounded bg-yellow-500 px-4 py-2 hover:bg-yellow-600"
+              class="text-sm rounded bg-yellow-500 px-3 py-2 hover:bg-yellow-600"
             >
               管理者画面
             </RouterLink>
@@ -17,13 +17,13 @@
             <RouterLink
               v-if="auth.user"
               to="/boards"
-              class="rounded bg-green-500 px-4 py-2 hover:bg-green-600"
+              class="text-sm rounded bg-green-500 px-3 py-2 hover:bg-green-600"
             >
               ボード一覧
             </RouterLink>
         
             <button
-              class="rounded bg-red-500 px-4 py-2 hover:bg-red-600"
+              class="text-sm rounded bg-red-500 px-3 py-2 hover:bg-red-600"
               @click="logout"
             >
               ログアウト

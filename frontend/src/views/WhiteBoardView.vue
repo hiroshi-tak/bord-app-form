@@ -25,7 +25,7 @@
 
       <select
         v-model.number="lineWidth"
-        class="rounded border px-3 py-2"
+        class="text-xs rounded border px-2 py-2"
       >
         <option :value="2">2px</option>
         <option :value="4">4px</option>
@@ -40,20 +40,20 @@
 
       <button
         @click="tool='pen'"
-        class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        class="text-sm rounded bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
       >
         ペン
       </button>
 
       <button
         @click="tool='eraser'"
-        class="rounded bg-yellow-500 px-4 py-2 text-white hover:bg-yellow-600"
+        class="text-sm rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
       >
         消しゴム
       </button>
 
-      <button @click="undo">UNDO</button>
-      <button @click="redo">REDO</button>
+      <button @click="undo" class="text-sm">UNDO</button>
+      <button @click="redo" class="text-sm">REDO</button>
 
     </div>
 
@@ -420,11 +420,28 @@ const connectWS = () => {
         return;
     }
 
-    // 再接続
+    socket.onclose = (event) => {
+
+      if(event.code === 3003){
+
+        alert(
+          "現在接続人数が上限に達しています"
+        );
+
+        router.push("/boards");
+
+        return;
+      }
+
+    }
+
+    // 再接続リトライ終了
     if (reconnectCount >= MAX_RECONNECT_COUNT) {
-      console.error(
-        "WebSocket reconnect failed"
+      alert(
+        "サーバーとの接続が切れました。ボード一覧へ戻ります。"
       );
+
+      router.push("/boards");
 
       return;
     }
@@ -444,7 +461,7 @@ const connectWS = () => {
 
   // 他ユーザーイベント受信
   socket.onmessage = (event) => {
-    console.log("WS received:", event.data);
+    //console.log("WS received:", event.data);
 
     const msg = JSON.parse(event.data);
 

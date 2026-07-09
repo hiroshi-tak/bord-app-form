@@ -20,7 +20,8 @@ api.interceptors.response.use(
         }
 
         if (
-            error.response?.status === 401 &&
+            (error.response?.status === 401 ||
+                error.response?.status === 403) &&
             !error.config?.url?.includes("/api/auth/refresh")
         ) {
             try {

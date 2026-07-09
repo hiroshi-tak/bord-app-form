@@ -69,10 +69,7 @@ router.beforeEach(async (to) => {
 
   const auth = useAuthStore();
 
-  // まだ未確認なら1回だけ確認
-  if (!auth.checked) {
-    await auth.fetchMe();
-  }
+  await auth.fetchMe();
 
   if (auth.user) {
     return true;

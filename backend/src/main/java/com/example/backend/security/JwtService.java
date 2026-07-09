@@ -29,7 +29,7 @@ public class JwtService {
         );
     }
 
-    private static final long EXPIRATION = 1000 * 60 * 15;
+    private static final long EXPIRATION = 1000 * 60 * 60;
 
     // ===== generate =====
 

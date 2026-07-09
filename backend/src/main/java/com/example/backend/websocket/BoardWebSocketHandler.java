@@ -119,7 +119,10 @@ public class BoardWebSocketHandler extends TextWebSocketHandler {
             // 上限チェック（join単位）
             if (joinedSessions.size() > MAX_CONNECTIONS) {
                 joinedSessions.remove(sessionId);
-                session.close(CloseStatus.POLICY_VIOLATION);
+                session.close(
+                    new CloseStatus(
+                        3003,
+                        "MAX_CONNECTIONS_REACHED"));
                 return;
             }
 
