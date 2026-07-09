@@ -98,6 +98,7 @@
 import { ref, onMounted, onUnmounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { api } from "@/lib/api";
+import { v4 as uuidv4 } from "uuid";
 
 const route = useRoute();
 const router = useRouter();
@@ -117,7 +118,7 @@ type Stroke = {
 };
 
 //ユーザー識別（リアルタイム共有用）
-const userId = crypto.randomUUID();
+const userId = uuidv4();
 const memberCount = ref(0);
 
 // UI・描画状態
