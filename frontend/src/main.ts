@@ -12,8 +12,4 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 
-const auth = useAuthStore(pinia);
-
-auth.fetchMe();
-
 app.mount("#app");

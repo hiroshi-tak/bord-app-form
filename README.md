@@ -265,4 +265,4 @@ Swagger UI を利用して API の仕様を確認できます。
 
 - EC2環境
 
-  - http://<サーバーIP>:8080/swagger-ui/index.html
+  - http://<サーバーIP>/swagger-ui/index.html
