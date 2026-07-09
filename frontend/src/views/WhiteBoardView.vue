@@ -15,7 +15,7 @@
     </div>
 
     <!-- ツールバー -->
-    <div class="mb-5 flex flex-wrap items-center gap-3 rounded-lg bg-white p-4 shadow">
+    <div class="mb-5 flex flex-wrap items-center gap-3 rounded-lg bg-white p-3 sm:p-4 shadow">
 
       <input
         type="color"

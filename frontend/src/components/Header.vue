@@ -1,11 +1,11 @@
 <template>
-  <header class="bg-blue-600 px-8 py-4 text-white">
-    <nav class="flex items-center justify-between">
+  <header class="bg-blue-600 px-4 sm:px-8 py-4 text-white">
+    <nav class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 class="text-xl font-bold">
         Whiteboard App
         </h1>
 
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-2">
             <RouterLink
               v-if="auth.user?.role === 'ADMIN'"
               to="/admin"
