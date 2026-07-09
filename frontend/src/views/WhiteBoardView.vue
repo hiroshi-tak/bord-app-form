@@ -15,17 +15,17 @@
     </div>
 
     <!-- ツールバー -->
-    <div class="mb-5 flex flex-wrap items-center gap-3 rounded-lg bg-white p-3 sm:p-4 shadow">
+    <div class="mb-5 flex items-center gap-3 overflow-x-auto whitespace-nowrap rounded-lg bg-white p-3 sm:p-4 shadow">
 
       <input
         type="color"
         v-model="color"
-        class="h-10 w-10 cursor-pointer rounded border"
+        class="h-10 w-10 flex-none cursor-pointer rounded border"
       />
 
       <select
         v-model.number="lineWidth"
-        class="text-xs rounded border px-2 py-2"
+        class="flex-none text-xs rounded border px-2 py-2"
       >
         <option :value="2">2px</option>
         <option :value="4">4px</option>
@@ -40,20 +40,20 @@
 
       <button
         @click="tool='pen'"
-        class="text-sm rounded bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
+        class="flex-none text-sm rounded bg-blue-600 px-3 py-2 text-white hover:bg-blue-700"
       >
         ペン
       </button>
 
       <button
         @click="tool='eraser'"
-        class="text-sm rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
-      >
+        class="flex-none text-sm rounded bg-yellow-500 px-3 py-2 text-white hover:bg-yellow-600"
+  >
         消しゴム
       </button>
 
-      <button @click="undo" class="text-sm">UNDO</button>
-      <button @click="redo" class="text-sm">REDO</button>
+      <button @click="undo" class="flex-none text-sm">UNDO</button>
+      <button @click="redo" class="flex-none text-sm">REDO</button>
 
     </div>
 
