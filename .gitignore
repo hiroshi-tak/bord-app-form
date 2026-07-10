@@ -27,3 +27,9 @@ Thumbs.db
 
 # Docker
 postgres-data/
+
+# Java Flight Recorder
+*.jfr
+
+# JFR output directory（使用している場合）
+jfr/
