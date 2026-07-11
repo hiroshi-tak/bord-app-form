@@ -31,15 +31,14 @@ jobs:
             --comment "Deploy Board App" \
             --parameters 'commands=[
               "cd /home/ubuntu/bord-app-form",
+              "pwd",
+              "git rev-parse --is-inside-work-tree",
+              "git remote -v",
+              "git branch",
               "git fetch origin main --prune",
-              "git checkout main",
               "git reset --hard origin/main",
-              "git pull origin main",
-              "git log --oneline -3",
-              "docker compose -f docker-compose.prod.yml down",
-              "docker compose -f docker-compose.prod.yml build backend",
-              "docker compose -f docker-compose.prod.yml build frontend",
-              "docker compose -f docker-compose.prod.yml up -d"
+              "git rev-parse HEAD",
+              "git log --oneline -3"
             ]' \
             --query "Command.CommandId" \
             --output text)
@@ -64,7 +63,7 @@ jobs:
                 --output text)
 
               echo "$OUTPUT"
-              
+
               break
             fi
 
