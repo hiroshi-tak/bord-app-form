@@ -32,8 +32,7 @@ jobs:
             --parameters 'commands=[
               "whoami",
               "cd /home/ubuntu/bord-app-form",
-              "pwd",
-              "git status",
+              "git config --global --add safe.directory /home/ubuntu/bord-app-form",
               "git fetch origin main --prune",
               "git reset --hard origin/main",
               "git rev-parse HEAD",

@@ -278,7 +278,7 @@ const draw = (event: PointerEvent) => {
 
     return;
   }
-/*
+
   const last =
     currentStroke.points[
       currentStroke.points.length - 1
@@ -292,7 +292,7 @@ const draw = (event: PointerEvent) => {
   ) {
     return;
   }
-*/
+
   currentStroke.points.push({ x, y });
 
   ctx.lineTo(x, y);
