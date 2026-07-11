@@ -57,6 +57,14 @@ jobs:
             echo "SSM Status: $STATUS"
 
             if [ "$STATUS" = "Success" ]; then
+              OUTPUT=$(aws ssm get-command-invocation \
+                --command-id $COMMAND_ID \
+                --instance-id i-037e99cc52d645d23 \
+                --query "StandardOutputContent" \
+                --output text)
+
+              echo "$OUTPUT"
+              
               break
             fi
 
