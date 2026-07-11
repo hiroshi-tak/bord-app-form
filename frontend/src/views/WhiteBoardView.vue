@@ -284,16 +284,14 @@ const draw = (event: PointerEvent) => {
       currentStroke.points.length - 1
     ];
 
-/*
   // 近すぎる点は保存しない
   if (
     last &&
-    Math.abs(x - last.x) < 3 &&
-    Math.abs(y - last.y) < 3
+    Math.abs(x - last.x) < 2 &&
+    Math.abs(y - last.y) < 2
   ) {
     return;
   }
-*/
 
   currentStroke.points.push({ x, y });
 
