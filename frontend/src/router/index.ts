@@ -44,7 +44,10 @@ const routes = [
           name: "admin",
           component: () =>
             import("@/views/AdminView.vue"),
-          meta: { requiresAuth: true },
+          meta: {
+            requiresAuth: true,
+            requiresAdmin: true
+          },
         },
       
     ],
@@ -63,19 +66,23 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
 
-  const requiresAuth = Boolean(to.meta.requiresAuth);
-
-  if (!requiresAuth) return true;
-
   const auth = useAuthStore();
 
-  await auth.fetchMe();
+  if (to.meta.requiresAuth) {
+    await auth.fetchMe();
 
-  if (auth.user) {
-    return true;
+    if (!auth.user) {
+      return "/login";
+    }
   }
 
-  return "/login";
+  if (to.meta.requiresAdmin) {
+    if (auth.user?.role !== "ADMIN") {
+      return "/boards";
+    }
+  }
+
+  return true;
 });
 
 export default router;

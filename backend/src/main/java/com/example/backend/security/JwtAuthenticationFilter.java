@@ -17,6 +17,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -37,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = resolveToken(request);
 
-            if (token != null && jwtService.validateToken(token)) {
+            if (token != null ) {
 
                 String username = jwtService.extractUsername(token);
                 String role = jwtService.extractRole(token);
@@ -57,6 +59,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
+
+        } catch (ExpiredJwtException e) {
+
+            response.sendError(
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    "Token expired");
         } finally {
             // リーク防止
             SecurityContextHolder.clearContext();

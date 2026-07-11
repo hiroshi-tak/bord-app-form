@@ -87,8 +87,6 @@ public class BoardWebSocketHandler extends TextWebSocketHandler {
         userSessions
             .computeIfAbsent(username, k -> ConcurrentHashMap.newKeySet())
             .add(session);
-
-        System.out.println("WebSocket connected: " + username);
     }
 
     @Override
@@ -218,8 +216,6 @@ public class BoardWebSocketHandler extends TextWebSocketHandler {
                         new TextMessage(json.toString()));
             }
         }
-
-        System.out.println("DISCONNECT / count=" + joinedSessions.size());
     }
 
 

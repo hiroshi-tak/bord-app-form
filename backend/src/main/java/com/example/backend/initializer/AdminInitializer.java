@@ -39,7 +39,5 @@ public class AdminInitializer implements CommandLineRunner {
         admin.setRole("ADMIN");
 
         userRepository.save(admin);
-
-        System.out.println("Admin user created");
     }
 }

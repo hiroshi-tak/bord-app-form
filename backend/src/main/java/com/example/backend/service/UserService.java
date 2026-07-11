@@ -21,12 +21,6 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /*
-    public void init() {
-        System.out.println("SERVICE START");
-    }
-    */
-
     // ユーザー登録
     public void register(RegisterRequest request) {
 
@@ -48,26 +42,12 @@ public class UserService {
     // ログイン
     public User login(LoginRequest request) {
 
-        System.out.println("=== LOGIN SERVICE ===");
-
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("ユーザーが存在しません"));
 
-        System.out.println("入力PW : " + request.getPassword());
-        System.out.println("DB PW  : " + user.getPassword());
-
-        boolean result = passwordEncoder.matches(
-                request.getPassword(),
-                user.getPassword());
-
-        System.out.println("matches = " + result);
-
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            System.out.println("=== PASSWORD NG ===");
             throw new RuntimeException("パスワードが違います");
         }
-
-        System.out.println("=== PASSWORD OK ===");
 
         return user;
     }

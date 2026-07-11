@@ -3,7 +3,6 @@ import { useAuthStore } from "@/stores/auth";
 import router from "@/router";
 
 export const api = axios.create({
-    //baseURL: import.meta.env.VITE_API_URL,
     baseURL: "/",
     withCredentials: true,
 });
@@ -19,19 +18,24 @@ api.interceptors.response.use(
             auth = useAuthStore();
         }
 
+        const originalRequest = error.config;
+
         if (
-            (error.response?.status === 401 ||
-                error.response?.status === 403) &&
+            (error.response?.status === 401 || error.response?.status === 403) &&
+            !originalRequest._retry &&
             !error.config?.url?.includes("/api/auth/refresh")
         ) {
+            originalRequest._retry = true;
+
             try {
                 await api.post("/api/auth/refresh");
 
-                return api.request(error.config);
+                return api.request(originalRequest);
 
             } catch {
                 auth.clear();
                 await router.push("/login");
+                return Promise.reject(error);
             }
         }
 

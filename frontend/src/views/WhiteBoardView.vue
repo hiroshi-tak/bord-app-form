@@ -144,6 +144,15 @@ let currentStroke: Stroke | null = null;
 // 描画ポイント数制限
 const MAX_POINTS = 5000;
 
+// 描画履歴最大数
+const MAX_STROKES = 1000;
+
+// REDO履歴最大数
+const MAX_REDO_STACK = 1000;
+
+// fps
+let lastCursorSendTime = 0;
+
 //Canvasレンダリング制御
 let ctx: CanvasRenderingContext2D | null = null;
 
@@ -152,6 +161,7 @@ let reconnectTimer: number | null = null;
 let reconnectCount = 0;
 const MAX_RECONNECT_COUNT = 5;
 let manualClose = false;
+
 
 // 再描画処理
 const redraw = () => {
@@ -308,6 +318,11 @@ const stopDraw = (event?: PointerEvent) => {
 
   strokes.value.push(currentStroke);
 
+  // 履歴数制限
+  if (strokes.value.length > MAX_STROKES) {
+    strokes.value.shift();
+  }
+
   sendStroke(currentStroke); // サーバへ送信
 
   currentStroke = null;
@@ -323,7 +338,13 @@ const undo = () => {
   if (strokes.value.length === 0) return;
 
   const stroke = strokes.value.pop();
-  if (stroke) redoStack.value.push(stroke);
+  if (stroke) {
+    redoStack.value.push(stroke);
+
+    if (redoStack.value.length > MAX_REDO_STACK) {
+      redoStack.value.shift();
+    }
+  }
 
   redraw();
 
@@ -365,7 +386,6 @@ const connectWS = () => {
   ws = socket;
 
   socket.onopen = () => {
-    console.log("WebSocket connected");
 
     reconnectCount = 0;
 
@@ -380,15 +400,6 @@ const connectWS = () => {
   };
 
   socket.onclose = (event) => {
-/*
-    console.log(
-      "WebSocket closed",
-      "code:",
-      event.code,
-      "reason:",
-      event.reason,
-    );
-*/
 
     ws = null;
 
@@ -449,10 +460,6 @@ const connectWS = () => {
     reconnectCount++;
 
     const delay = reconnectCount * 2000;
-
-    console.log(
-      `Reconnect attempt ${reconnectCount} after ${delay}ms`
-    );
 
     reconnectTimer = window.setTimeout(() => {
       connectWS();
@@ -543,7 +550,7 @@ const sendStroke = (stroke: Stroke) => {
 
   const sendData = {
     ...stroke,
-    points: simplifyPoints(stroke.points, 3)
+    points: simplifyPoints(stroke.points, 2)
   };
 
   if (stroke.points.length > MAX_POINTS) {
@@ -561,10 +568,7 @@ const sendStroke = (stroke: Stroke) => {
     data: sendData
   });
 
-  console.log(
-    "stroke size:",
-    message.length
-  );
+  //console.log("stroke size:", message.length);
 
   ws.send(message);
 };
@@ -603,6 +607,15 @@ const cursors = ref<Record<string, {
 // カーソル送信（60fps制限あり）
 const sendCursor = (e: PointerEvent) => {
   if (!ws || ws.readyState !== WebSocket.OPEN) return;
+
+  const now = performance.now();
+
+  // 60fps制限（約16ms）
+  if (now - lastCursorSendTime < 16) {
+    return;
+  }
+
+  lastCursorSendTime = now;
 
   const canvas = canvasRef.value;
   if (!canvas) return;
