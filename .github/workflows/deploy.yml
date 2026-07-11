@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - uses: actions/checkout@v4
 
       - name: Configure AWS Credentials
@@ -25,9 +26,12 @@ jobs:
             --instance-ids i-037e99cc52d645d23 \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy Board App" \
-            --parameters commands='[
+            --parameters 'commands=[
               "cd /home/ubuntu/bord-app-form",
-              "git pull origin main",
-              "docker compose down",
-              "docker compose up -d --build"
+              "git fetch origin main",
+              "git reset --hard origin/main",
+              "docker compose -f docker-compose.prod.yml down",
+              "docker compose -f docker-compose.prod.yml build backend",
+              "docker compose -f docker-compose.prod.yml build frontend",
+              "docker compose -f docker-compose.prod.yml up -d"
             ]'
