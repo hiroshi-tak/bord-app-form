@@ -25,16 +25,42 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          aws ssm send-command \
+          COMMAND_ID=$(aws ssm send-command \
             --instance-ids i-037e99cc52d645d23 \
             --document-name "AWS-RunShellScript" \
             --comment "Deploy Board App" \
             --parameters 'commands=[
               "cd /home/ubuntu/bord-app-form",
-              "git fetch origin main",
+              "git fetch origin",
               "git reset --hard origin/main",
               "docker compose -f docker-compose.prod.yml down",
               "docker compose -f docker-compose.prod.yml build backend",
               "docker compose -f docker-compose.prod.yml build frontend",
               "docker compose -f docker-compose.prod.yml up -d"
-            ]'
+            ]' \
+            --query "Command.CommandId" \
+            --output text)
+
+          echo "Command ID: $COMMAND_ID"
+
+          while true
+          do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id $COMMAND_ID \
+              --instance-id i-037e99cc52d645d23 \
+              --query "Status" \
+              --output text)
+
+            echo "SSM Status: $STATUS"
+
+            if [ "$STATUS" = "Success" ]; then
+              break
+            fi
+
+            if [ "$STATUS" = "Failed" ] || [ "$STATUS" = "Cancelled" ] || [ "$STATUS" = "TimedOut" ]; then
+              echo "SSM command failed"
+              exit 1
+            fi
+
+            sleep 10
+          done
