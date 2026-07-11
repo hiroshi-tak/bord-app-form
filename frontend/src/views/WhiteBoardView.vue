@@ -371,11 +371,7 @@ const connectWS = () => {
 
   if (ws && ws.readyState === WebSocket.OPEN) return;
   if (ws && ws.readyState === WebSocket.CONNECTING) return;
-/*
-  const socket = new WebSocket(
-    `${import.meta.env.VITE_WS_URL}/ws/board?boardId=${route.params.id}`
-  );
-*/
+
   const protocol =
   location.protocol === "https:" ? "wss" : "ws";
 
