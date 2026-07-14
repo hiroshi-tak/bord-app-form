@@ -18,6 +18,13 @@
             placeholder="ユーザー名を入力"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+
+          <p
+            v-if="errors.username"
+            class="mt-1 text-sm text-red-500"
+          >
+            {{ errors.username }}
+          </p>
         </div>
 
         <div>
@@ -35,6 +42,13 @@
             placeholder="パスワードを入力"
             class="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+
+          <p
+            v-if="errors.password"
+            class="mt-1 text-sm text-red-500"
+          >
+            {{ errors.password }}
+          </p>
         </div>
 
         <p
@@ -74,21 +88,34 @@ const router = useRouter();
 const username = ref("");
 const password = ref("");
 const error = ref("");
+const errors = ref<Record<string, string>>({});
 const auth = useAuthStore();
 
 const login = async () => {
   error.value = "";
+  errors.value = {};
 
   try {
     await authApi.login(username.value, password.value);
 
     await auth.fetchMe();
 
-    router.push("/boards");
+    alert("ログインしました");
+    await router.push("/boards");
 
   } catch (e: any) {
-    error.value =
-      e?.response?.data || "ログイン失敗";
+    if (e.response?.status === 400 &&
+      typeof e.response.data === "object") {
+
+      // Bean Validation
+      errors.value = e.response.data;
+
+    } else {
+
+      // 認証失敗など
+      error.value = "ユーザー名またはパスワードが違います。";
+
+    }
   }
 };
 </script>

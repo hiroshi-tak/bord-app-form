@@ -11,6 +11,8 @@ import com.example.backend.security.JwtService;
 import com.example.backend.entity.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+
 import org.springframework.http.HttpHeaders;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +39,7 @@ public class AuthController {
 
         // ユーザー登録
         @PostMapping("/register")
-        public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+        public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
 
                 try {
                         userService.register(request);
@@ -53,7 +55,7 @@ public class AuthController {
 
         // ログイン
         @PostMapping("/login")
-        public ResponseEntity<String> login(@RequestBody LoginRequest request){
+        public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request){
 
                 try {
                         User user = userService.login(request);

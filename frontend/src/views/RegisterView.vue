@@ -17,6 +17,13 @@
             type="text"
             class="w-full rounded-md border px-3 py-2"
           />
+
+          <p
+            v-if="errors.username"
+            class="mt-1 text-sm text-red-500"
+          >
+            {{ errors.username }}
+          </p>
         </div>
 
         <div>
@@ -39,6 +46,20 @@
             type="password"
             class="w-full rounded-md border px-3 py-2"
           />
+          
+          <p
+            v-if="errors.password"
+            class="mt-1 text-sm text-red-500"
+          >
+            {{ errors.password }}
+          </p>
+
+          <p
+            v-if="errors.confirmPassword"
+            class="mt-1 text-sm text-red-500"
+          >
+            {{ errors.confirmPassword }}
+          </p>
         </div>
 
         <button
@@ -73,24 +94,32 @@ const username = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const error = ref("");
+const errors = ref<Record<string, string>>({});
 
 const onSubmit = async () => {
   error.value = "";
+  errors.value = {};
 
   if (password.value !== confirmPassword.value) {
-    error.value = "パスワードが一致しません";
+    errors.value.confirmPassword = "パスワードが一致しません";
     return;
   }
 
   try {
     await register(username.value, password.value);
 
-    // 成功したらログインへ
-    router.push("/login");
+    alert("登録しました");
+    await router.push("/login");
 
   } catch (e: any) {
-    error.value =
-      e?.response?.data || "登録に失敗しました";
+
+    if (e.response?.status === 400 &&
+      typeof e.response.data === "object"
+    ) {
+      errors.value = e.response.data;
+    } else {
+      error.value = e?.response?.data ?? "登録に失敗しました";
+    }
   }
 };
 </script>

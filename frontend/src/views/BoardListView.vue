@@ -7,25 +7,36 @@
 
     <div
       v-if="error"
-      class="mb-4 rounded bg-red-100 p-3 text-red-700"
+      class="text-sm mb-4 rounded bg-red-100 p-3 text-red-700"
     >
       {{ error }}
     </div>
 
-    <input
-        v-model="title"
-        type="text"
-        placeholder="ボード名"
-        class="rounded border px-3 py-2"
-    />
+    <div class="flex items-start gap-3">
+      <div class="flex-1">
+        <input
+            v-model="title"
+            type="text"
+            placeholder="ボード名"
+            class="rounded border px-3 py-2"
+        />
 
-    <button
-        @click="createBoard"
-        class="rounded bg-green-600 px-5 py-3 text-white hover:bg-green-700"
+        <p
+          v-if="errors.title"
+          class="mt-1 text-sm text-red-500"
         >
-        ＋ 新しいボードを作成
-    </button>
+          {{ errors.title }}
+        </p>
+      </div>
 
+      <button
+          @click="createBoard"
+          class="rounded bg-green-600 px-5 py-3 text-white hover:bg-green-700"
+          >
+          ＋ 新しいボードを作成
+      </button>
+    </div>
+    
     <div class="space-y-5">
 
       <div
@@ -70,6 +81,7 @@ interface Board {
 const router = useRouter();
 const title = ref("");
 const error = ref("");
+const errors = ref<Record<string, string>>({});
 const boards = ref<Board[]>([]);
 
 onMounted(async () => {
@@ -83,11 +95,7 @@ onMounted(async () => {
 
 const createBoard = async () => {
   error.value = "";
-
-  if (!title.value) {
-    error.value = "ボード名を入力してください。";
-    return;
-  } 
+  errors.value = {};
 
   try {
     await api.post("/api/boards", {
@@ -102,8 +110,19 @@ const createBoard = async () => {
     boards.value = res.data;
 
   } catch (e: any) {
-    error.value =
-      e?.response?.data || "ボードの作成に失敗しました。";
+    if (
+      e.response?.status === 400 &&
+      typeof e.response.data === "object"
+    ) {
+
+      errors.value = e.response.data;
+
+    } else {
+
+      error.value =
+        e?.response?.data ?? "ボードの作成に失敗しました。";
+
+    }
   }
 };
 </script>

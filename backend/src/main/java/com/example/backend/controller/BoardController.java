@@ -14,6 +14,8 @@ import com.example.backend.entity.User;
 import com.example.backend.service.BoardService;
 import com.example.backend.service.UserService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/boards")
 public class BoardController {
@@ -32,7 +34,7 @@ public class BoardController {
         // ボード作成
         @PostMapping
         public ResponseEntity<BoardResponse> create(
-                        @RequestBody CreateBoardRequest request,
+                        @Valid @RequestBody CreateBoardRequest request,
                         Principal principal) {
 
                 User user = userService.findByUsername(principal.getName());
@@ -69,7 +71,7 @@ public class BoardController {
         @PutMapping("/{id}")
         public ResponseEntity<BoardResponse> update(
                         @PathVariable Long id,
-                        @RequestBody UpdateBoardRequest request) {
+                        @Valid @RequestBody UpdateBoardRequest request) {
 
                 Board board = boardService.update(
                                 id,
