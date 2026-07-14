@@ -12,7 +12,7 @@
       {{ error }}
     </div>
 
-    <div class="flex items-start gap-3">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-start">
       <div class="flex-1">
         <input
             v-model="title"
