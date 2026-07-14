@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = resolveToken(request);
 
-            if (token != null ) {
+            if (token != null) {
 
                 String username = jwtService.extractUsername(token);
                 String role = jwtService.extractRole(token);
@@ -59,16 +59,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
 
-
         } catch (ExpiredJwtException e) {
 
             response.sendError(
                     HttpServletResponse.SC_UNAUTHORIZED,
                     "Token expired");
-        } finally {
-            // リーク防止
-            SecurityContextHolder.clearContext();
         }
+    }
+    
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+
+        String path = request.getServletPath();
+
+        return path.startsWith("/api/auth/");
     }
 
     private String resolveToken(HttpServletRequest request) {
