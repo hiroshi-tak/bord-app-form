@@ -55,6 +55,13 @@
       <button @click="undo" class="flex-none text-sm">UNDO</button>
       <button @click="redo" class="flex-none text-sm">REDO</button>
 
+      <button
+        @click="saveImage"
+        class="flex-none text-sm rounded bg-green-500 px-3 py-2 text-white hover:bg-green-600"
+      >
+        SAVE IMAGE
+      </button>
+
     </div>
 
     <!-- 描画エリア -->
@@ -629,6 +636,48 @@ const sendCursor = (e: PointerEvent) => {
     x: (e.clientX - rect.left) * scaleX,
     y: (e.clientY - rect.top) * scaleY
   }));
+};
+
+// イメージ保存
+const saveImage = () => {
+
+  const canvas = canvasRef.value;
+
+  if (!canvas) return;
+
+  const tempCanvas = document.createElement("canvas");
+
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+
+  const tempCtx = tempCanvas.getContext("2d");
+
+  if (!tempCtx) return;
+
+  // 白背景
+  tempCtx.fillStyle = "#ffffff";
+
+  tempCtx.fillRect(
+    0,
+    0,
+    tempCanvas.width,
+    tempCanvas.height
+  );
+
+  // 現在のCanvasをコピー
+  tempCtx.drawImage(
+    canvas,
+    0,
+    0
+  );
+
+  const a = document.createElement("a");
+
+  a.href = tempCanvas.toDataURL("image/png");
+
+  a.download = "whiteboard.png";
+
+  a.click();
 };
 
 // 初期化 / ライフサイクル
