@@ -2,7 +2,8 @@ package com.example.backend.controller;
 
 import com.example.backend.service.AdminUserService;
 import org.springframework.web.bind.annotation.*;
-import com.example.backend.entity.User;
+
+import com.example.backend.dto.AdminUserResponse;
 import java.util.List;
 
 @RestController
@@ -17,7 +18,7 @@ public class AdminUserController {
     }
 
     @GetMapping
-    public List<User> list() {
+    public List<AdminUserResponse> list() {
         return adminUserService.findAll();
     }
 

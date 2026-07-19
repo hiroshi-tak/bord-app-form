@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.AdminUserResponse;
 import com.example.backend.entity.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.websocket.BoardWebSocketHandler;
@@ -22,8 +23,14 @@ public class AdminUserService {
         this.boardWebSocketHandler = boardWebSocketHandler;
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<AdminUserResponse> findAll() {
+        return userRepository.findAll()
+            .stream()
+                .map(user -> new AdminUserResponse(
+                        user.getId(),
+                        user.getUsername()
+                ))
+                .toList();
     }
 
     public void delete(Long id) {
